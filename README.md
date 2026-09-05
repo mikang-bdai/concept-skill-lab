@@ -73,7 +73,7 @@ cat .workbuddy/skills/learn-a-concept/SKILL.md
 
 四份资料结构一致（8 章节模板：定义 / 解决什么问题 / 核心要点 / 误解 / 关系 / 例子 / 自检 / 下一步），可以从任意一份开始读。
 
-## AI 协助 + 人工核查记录
+## AI 协助 + 人工核查 + 人工修改
 
 **这次作业里 AI 做了什么：**
 - 设计 Skill `learn-a-concept` 的整体结构（触发条件 / 工作流 / 输出模板 / 注意事项 四件套）
@@ -81,6 +81,7 @@ cat .workbuddy/skills/learn-a-concept/SKILL.md
 - 把 markdown 源稿转写成 HTML 排版版（带卡片 / 关系图 / 误解对比 / 自检折叠 / 互链）
 - 额外补一个 `concept-relationship.html` 关系图页（作业明确要求但 Skill 默认模板里没有的"概念关系"维度）
 - 整理提交历史、撰写 README 和 assignments/homework-1.md
+- 草拟学习通提交文本模板（`assignments/submission-text.md`）
 
 **人工核查了什么：**
 - ✅ 概念解释的准确性：Agent 的"三件套"、Skill 的"四件套"、上下文的"Lost in the Middle"都是常见共识，没有伪造成分
@@ -88,8 +89,17 @@ cat .workbuddy/skills/learn-a-concept/SKILL.md
 - ✅ 目录结构与作业要求一一对照：4 个 HTML + SKILL.md + README + .gitignore 全齐
 - ✅ 自我检查的三个判断题是自己能答出来的（不是机器编的）
 
+**人工修改了什么**（这一项是作业图里特别要求说明的）：
+- 🔧 **HTML 排版是手写 CSS 重做的**（不是把 markdown 让 AI 转 HTML 再贴），目的是保证 4 个文件视觉风格统一、跨文件跳转顺畅
+- 🔧 **concept-relationship.html 的 SVG 关系图是自己设计的**（Agent 舞台 → LLM 大脑 → 上下文窗口 → 工具/Skill 的连接关系是按 Agent 工程实践画的，不是 AI 随机生成）
+- 🔧 **3 份资料的"常见误解"条目**是 AI 提议候选后我**人工挑了 5 条**（删除了一些似是而非的，去掉了一些重复的），不是全盘接受
+- 🔧 **文档一致性反复迭代**：commits 数从 4 改到 5 再到 6、homework-1.md 里的"提交历史"段同步、push workaround 段从"用 Contents API 逐文件"刷新为"用 git-data API 重建"——这些**细节对齐是手工做的**，AI 不会主动同步
+- 🔧 **目录结构决策**：作业要求 `learning-materials/*.html`，AI 默认输出 markdown 到 `notes/`，**两个目录都保留**是手工拍板（AI 给的方案是只留一个目录）
+- 🔧 **`assignments/homework-1.md` 里"已 push GitHub"那段吹牛被自己发现并修正**（之前会话说"已 push"但其实没真传），这种自我审视是手工做的
+
 **故意没让 AI 做的事：**
-- 没有让 AI 写 README 的"作业信息"部分（仓库名 / 路径 / 提交历史）——这些是事实，不能生成
+- 没有让 AI 写 README 的"仓库信息"部分（仓库名 / 路径 / 提交历史）——这些是事实，不能生成
+- 没有让 AI 伪造参考资料链接（`*.html` 第 8 章"下一步能去哪儿"里没给具体链接的条目，都是真实可查但没收录的，标了名字不编 URL）
 
 ## 仓库信息
 

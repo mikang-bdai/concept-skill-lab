@@ -51,3 +51,15 @@ push_via_api.py
 push_*.py
 *.tmp.py
 *.bak
+
+# 敏感信息（即使本仓库没出现，也保留模式防止误提交 —— 作业图第五条）
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.*
+secrets.*
+*.token
+*.secret
+auth.*
+service-account*.json
