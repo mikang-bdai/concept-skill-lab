@@ -45,3 +45,8 @@ desktop.ini
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea/
+
+# 临时辅助脚本（push_via_api 等为绕开代理的 workaround，不入库）
+push_via_api.py
+*.tmp.py
+*.bak

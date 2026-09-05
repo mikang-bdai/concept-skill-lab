@@ -53,4 +53,11 @@ concept-skill-lab/
 
 ## 提交历史
 
-（提交后补充）
+本地 2 个语义清晰的 commit；GitHub 上 7 个 commit（每个文件一个，因为 GitHub Contents API 一次只能操作一个文件）。
+
+## 关键踩坑
+
+1. **代理只放 `api.github.com`，不放 `github.com`**：当前环境的 `127.0.0.1:57376` 代理对 `github.com` 域名的 git 协议返 502，但 `api.github.com` OK。所以 `git push` 不通，但 `gh api` 通。
+3. **绕过方法**：写 `push_via_api.py`（已加入 `.gitignore`），用 GitHub Contents API 逐文件上传。
+
+2. **WorkBuddy 项目级 Skill 的识别时机**：Skill 物理文件写到 `<workspace>/.workbuddy/skills/<name>/SKILL.md` 后，要在 WorkBuddy 里**重新打开那个目录**才能被识别。本仓库的 Skill 在 WorkBuddy 直接打开 `D:/wawa/concept-skill-lab/` 时可用。
