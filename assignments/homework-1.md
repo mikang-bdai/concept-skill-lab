@@ -25,7 +25,7 @@
 - 名称：`learn-a-concept`
 - 类型：项目级 Skill
 - 路径：`<仓库根>/.workbuddy/skills/learn-a-concept/SKILL.md`
-- 功能：输入概念 → 生成 8 章节结构化学习资料 → 写到 `notes/<概念>.md`
+- 功能：输入概念 → 生成 9 章节结构化学习资料（§0 学习目标 + 8 章节正文）→ 写到 `notes/<概念>.md`
 
 ## 生成的学习资料
 

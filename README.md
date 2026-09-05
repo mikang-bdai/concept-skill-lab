@@ -53,7 +53,7 @@ concept-skill-lab/
    learn-a-concept: <你想学的概念>
    ```
    或者自然语言："帮我学一下 X""X 是什么""讲讲 X"
-3. Skill 会生成 8 章节结构化 markdown，落到 `notes/<编号>-<概念>.md`
+3. Skill 会生成 9 章节结构化 markdown（顶部 §0 学习目标 + 8 章节正文），落到 `notes/<编号>-<概念>.md`
 4. 如需 HTML 排版版，手动把 md 渲染成 HTML 放到 `learning-materials/`
 
 ### 命令行直接查看 Skill 定义
@@ -71,7 +71,7 @@ cat .workbuddy/skills/learn-a-concept/SKILL.md
 | Skill | [`notes/03-skill.md`](notes/03-skill.md) | [learning-materials/skill.html](learning-materials/skill.html) |
 | **三者的关系** | — | [learning-materials/concept-relationship.html](learning-materials/concept-relationship.html) |
 
-四份资料结构一致（8 章节模板：定义 / 解决什么问题 / 核心要点 / 误解 / 关系 / 例子 / 自检 / 下一步），可以从任意一份开始读。
+四份资料结构一致（9 章节模板：§0 学习目标 / §1 一句话定义 / §2 解决什么问题 / §3 核心要点 / §4 常见误解 / §5 关系 / §6 例子 / §7 自检 / §8 下一步），可以从任意一份开始读。
 
 ## AI 协助 + 人工核查 + 人工修改
 
