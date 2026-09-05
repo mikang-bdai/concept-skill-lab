@@ -67,16 +67,16 @@ concept-skill-lab/
 
 ## 提交历史
 
-- 本地：4 个语义清晰的 commit
+- 本地 & 远程：5 个语义清晰的 commit（远程通过 git-data API 重建 + Contents API 追加，SHA 跟本地不一致但内容 1:1）
   - `init: scaffold + project-level Skill learn-a-concept`
   - `notes: add 3 concept learning materials via learn-a-concept`
   - `docs: 补充提交历史 + 把临时 push 脚本加入 .gitignore`
   - `materials: add 4 HTML 学习资料 + 更新 README 与作业存档`
-- 远程：与本地一致（push 在最后一步完成）
+  - `chore: 忽略 push_*.py 通配（workaround 脚本不入库）`
 
 ## 关键踩坑
 
-1. **代理只放 `api.github.com`，不放 `github.com`**：当前环境的 `127.0.0.1:57376` 代理对 `github.com` 域名的 git 协议返 502，但 `api.github.com` OK。所以 `git push` 不通，但 `gh api` 通。
-2. **绕过方法**：写 `push_via_api.py`（已加入 `.gitignore`），用 GitHub Contents API 逐文件上传。
+1. **本机 `git push` 不可用**：`127.0.0.1:57376` 代理对 `github.com:443`（git 协议）返 502 拒连；取消代理直连 github.com 也超时（被网络封）。代理只放 `api.github.com`，所以必须走 GitHub REST API。
+2. **绕过方法**：用 **git-data API** 重建 commit 链（POST blob/tree/commit + PATCH ref force=true），完整保留本地 commit 历史；单文件追加用 Contents API PUT。脚本 `push_via_git_data_api.py` 已加进 `.gitignore`（`push_*.py` 通配），不入库。`api.github.com` 偶尔 TLS 超时，脚本要带 6 次重试。
 3. **WorkBuddy 项目级 Skill 的识别时机**：Skill 物理文件写到 `<workspace>/.workbuddy/skills/<name>/SKILL.md` 后，要在 WorkBuddy 里**重新打开那个目录**才能被识别。本仓库的 Skill 在 WorkBuddy 直接打开 `D:/wawa/concept-skill-lab/` 时可用。
 4. **作业目录要求 vs 已有命名**：作业要求 `learning-materials/*.html`，但 Skill 默认输出 markdown 到 `notes/`。两个目录都保留 —— `notes/` 是源稿，GitHub 直接渲染；`learning-materials/` 是 HTML 排版版，浏览器打开即看，匹配作业目录要求。
