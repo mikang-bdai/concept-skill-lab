@@ -13,7 +13,7 @@
 - 仓库地址：https://github.com/mikang-bdai/concept-skill-lab
 - 可见性：public（教师可直接查看）
 - 本地路径：`D:\wawa\concept-skill-lab`
-- 提交历史：6 个语义清晰的 commit（init → notes → docs → materials → chore → docs），本地与远程一致
+- 提交历史：9 个语义清晰的 commit（init → notes → docs → materials → chore → docs → chore → docs → chore），本地与远程内容 1:1 对应（SHA 不同，原因是通过 git-data API 重建）
 
 **二、Skill 设计**
 
