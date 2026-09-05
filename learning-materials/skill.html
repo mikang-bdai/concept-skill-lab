@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill · 概念学习资料</title>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --surface: #ffffff;
+    --ink: #1a1f2c;
+    --ink-2: #4a5468;
+    --ink-3: #7a8294;
+    --line: #e6e1d6;
+    --line-2: #efeadd;
+    --brand: #0e7c86;
+    --brand-2: #14a3af;
+    --brand-soft: #e3f3f5;
+    --accent: #c2410c;
+    --accent-soft: #fff1e6;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --warn: #a16207;
+    --warn-soft: #fef3c7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+  .topbar {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+    margin-bottom: 24px; font-size: 14px;
+  }
+  .topbar a {
+    color: var(--ink-2); text-decoration: none;
+    padding: 6px 12px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--surface);
+    transition: all .15s ease;
+  }
+  .topbar a:hover { border-color: var(--brand); color: var(--brand); }
+  .topbar a.current { background: var(--brand); color: white; border-color: var(--brand); }
+  .topbar .sep { color: var(--ink-3); align-self: center; }
+  .badge {
+    display: inline-block; font-size: 12px; padding: 2px 10px;
+    background: var(--brand-soft); color: var(--brand);
+    border-radius: 999px; font-weight: 500; letter-spacing: .5px;
+  }
+  h1 {
+    font-size: 44px; line-height: 1.15; margin: 8px 0 6px;
+    font-weight: 700; letter-spacing: -1px;
+  }
+  .lede {
+    font-size: 19px; color: var(--ink-2); margin: 8px 0 4px;
+    padding: 16px 20px; background: var(--surface);
+    border-left: 4px solid var(--brand); border-radius: 0 8px 8px 0;
+  }
+  .meta { color: var(--ink-3); font-size: 13px; margin: 16px 0 32px; }
+  h2 {
+    font-size: 24px; margin: 48px 0 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-weight: 600; letter-spacing: -.3px;
+  }
+  h2 .num {
+    display: inline-block; width: 32px; height: 32px;
+    background: var(--brand-soft); color: var(--brand);
+    border-radius: 8px; text-align: center; line-height: 32px;
+    font-size: 15px; margin-right: 10px; vertical-align: middle;
+    font-weight: 600;
+  }
+  h3 { font-size: 18px; margin: 24px 0 8px; color: var(--ink); }
+  p { margin: 8px 0; color: var(--ink-2); }
+  ul, ol { padding-left: 22px; }
+  li { margin: 6px 0; color: var(--ink-2); }
+  li strong { color: var(--ink); }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+    background: var(--line-2); color: var(--accent);
+    padding: 1px 6px; border-radius: 4px; font-size: .92em;
+  }
+  pre {
+    background: #1a1f2c; color: #e8eaf0;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; font-size: 14px; line-height: 1.5;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  blockquote {
+    margin: 12px 0; padding: 12px 18px;
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    color: var(--ink-2); border-radius: 0 6px 6px 0;
+  }
+  blockquote p { color: var(--ink-2); margin: 4px 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 20px; margin: 14px 0;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .misconception {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin: 12px 0; align-items: stretch;
+  }
+  @media (max-width: 640px) { .misconception { grid-template-columns: 1fr; } }
+  .mis { padding: 12px 14px; border-radius: 8px; font-size: 15px; }
+  .mis-bad { background: var(--bad-soft); color: #7f1d1d; border-left: 3px solid var(--bad); }
+  .mis-good { background: var(--good-soft); color: #14532d; border-left: 3px solid var(--good); }
+  .mis-label { font-size: 12px; font-weight: 600; letter-spacing: .5px; margin-bottom: 4px; opacity: .75; }
+  .rel-card {
+    padding: 14px 16px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+    margin: 8px 0;
+  }
+  .rel-card .rel-name { font-weight: 600; color: var(--brand); }
+  .example {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px 22px; margin: 14px 0;
+    position: relative;
+  }
+  .example::before {
+    content: "💡"; position: absolute; top: -14px; left: 18px;
+    background: var(--bg); padding: 0 6px; font-size: 22px;
+  }
+  details {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 16px; margin: 8px 0;
+  }
+  details summary {
+    cursor: pointer; font-weight: 500; color: var(--ink);
+    list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  details summary::before {
+    content: "→"; color: var(--brand); font-weight: 700;
+    transition: transform .2s; display: inline-block;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  details summary::-webkit-details-marker { display: none; }
+  details .hint {
+    margin-top: 8px; color: var(--ink-3); font-size: 14px;
+    padding: 8px 12px; background: var(--brand-soft);
+    border-radius: 6px;
+  }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .ref-list a { color: var(--brand); text-decoration: none; font-weight: 500; }
+  .ref-list a:hover { text-decoration: underline; }
+  .footer {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line);
+    color: var(--ink-3); font-size: 13px;
+  }
+  .footer .source { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; background: var(--line-2); color: var(--ink-2); border-radius: 4px; margin-right: 4px; }
+  .four-set {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0;
+  }
+  @media (max-width: 640px) { .four-set { grid-template-columns: 1fr; } }
+  .four-set .piece {
+    padding: 12px 14px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+  }
+  .four-set .piece .label { font-size: 12px; color: var(--brand); font-weight: 600; margin-bottom: 4px; letter-spacing: .5px; }
+  .four-set .piece .desc { font-size: 14px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topbar">
+    <span class="sep">学习资料：</span>
+    <a href="agent.html">Agent</a>
+    <a href="llm-context.html">大模型的上下文</a>
+    <a href="skill.html" class="current">Skill</a>
+    <a href="concept-relationship.html">三者关系 ↗</a>
+  </nav>
+
+  <h1>Skill</h1>
+  <p><span class="badge">概念 03</span> &nbsp; <span class="tag">SKILL.md</span><span class="tag">可复用</span><span class="tag">岗位 SOP</span></p>
+  <p class="lede">把"做某件事的最佳实践 + 工具调用 + 输出规范"打包成一个可复用的指令包，让 AI 在合适场景自动或手动调用。</p>
+  <p class="meta">生成于 2026-09-05 · 来源：项目级 Skill <code>learn-a-concept</code> · 源文件：<code>notes/03-skill.md</code></p>
+
+  <h2><span class="num">1</span>一句话定义</h2>
+  <p>Skill 是一份<strong>结构化的指令文档</strong>，告诉 AI「当遇到 X 场景时，按这套工作流办事，按这个模板输出」—— 本质上是给 AI 的一份「岗位操作手册」。</p>
+
+  <h2><span class="num">2</span>解决什么问题</h2>
+  <div class="card">
+    <p><strong>场景</strong>：你经常让 AI 做某类任务（比如学概念、写周报、改代码），每次都重复讲一遍规则太啰嗦。</p>
+    <p><strong>痛点</strong>：零散 prompt 难维护、跨会话丢失、不同人写的风格不一致、好的工作流没法沉淀复用。</p>
+    <p><strong>不解决的后果</strong>：每次都从零讲背景，AI 输出质量参差不齐，好的方法论没人能复用。</p>
+  </div>
+
+  <h2><span class="num">3</span>核心要点（5-8 条）</h2>
+  <div class="four-set">
+    <div class="piece"><div class="label">触发条件（WHEN）</div><div class="desc">什么场景下该用它 —— 写在 frontmatter 的 description 里。</div></div>
+    <div class="piece"><div class="label">工作流（HOW）</div><div class="desc">具体怎么分步执行 —— 主体内容里的步骤说明。</div></div>
+    <div class="piece"><div class="label">输出模板（WHAT）</div><div class="desc">最后长什么样 —— 模板代码块明确格式。</div></div>
+    <div class="piece"><div class="label">注意事项（CAVEATS）</div><div class="desc">哪些坑不能踩 —— 边界条件与正确性优先。</div></div>
+  </div>
+  <ul>
+    <li>通常以 <code>SKILL.md</code> 文件形式存储，<strong>项目级</strong>放 <code>&lt;项目&gt;/.workbuddy/skills/&lt;name&gt;/</code>，<strong>用户级</strong>放 <code>~/.workbuddy/skills/&lt;name&gt;/</code>。</li>
+    <li>核心价值是<strong>复用</strong>：写好一次，所有人和所有会话都能用，且输出风格一致。</li>
+    <li>好的 Skill 要包含：清晰的描述、明确的步骤、确定的输出模板、明确的边界（不该做什么）。</li>
+    <li>不只是"指令"——好的 Skill 会告诉 AI <strong>用什么工具</strong>、<strong>遵循什么约定</strong>、<strong>避免什么坑</strong>。</li>
+    <li><strong>可演进</strong>：用着用着发现问题就改 SKILL.md，下次自动更聪明。</li>
+    <li>粒度要合适：太粗（"帮我干活"）没用，太细（"如何输入一句话"）难维护。</li>
+    <li><strong>触发机制</strong>：有的是显式调用（<code>learn-a-concept: Agent</code>），有的是 AI 自动识别场景触发。</li>
+  </ul>
+
+  <h2><span class="num">4</span>常见误解</h2>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>"Skill = 系统提示词"</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>System prompt 是全局偏好，Skill 是按场景触发的"专项手册"。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>"Skill 越多越好"</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>Skill 多到互相重叠会让 AI 不知道该用哪个，反而降低效果。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>"Skill 一次写好就完事"</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>Skill 是用出来的，要根据实际效果反复打磨。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>"Skill 跟代码无关"</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>Skill 常常会调用工具（读文件、写文件、跑命令），跟代码强相关。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>"Skill 可以让 AI 学会新知识"</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>Skill 只是给指令，不能改变模型本身的能力上限。</div>
+  </div>
+
+  <h2><span class="num">5</span>跟其他概念的关系</h2>
+  <div class="rel-card"><span class="rel-name">Prompt</span>：Prompt 是"一次性说的话"，Skill 是"可重复用的话术包"，Skill 通常被引用展开成 Prompt。</div>
+  <div class="rel-card"><span class="rel-name">Agent</span>：Skill 是 Agent 的"技能库"，Agent 在循环里决定什么时候用哪个 Skill。 <a href="agent.html">→ 详见</a></div>
+  <div class="rel-card"><span class="rel-name">Workflow / SOP</span>：Skill 是把人类 SOP"翻译"成 AI 能执行的指令版，本质是知识工程化。</div>
+  <div class="rel-card"><span class="rel-name">Plugin / Tool</span>：Plugin 是"AI 能调的功能"，Skill 是"AI 何时该怎么调"的指南，两者常配合使用。</div>
+  <div class="rel-card"><span class="rel-name">RAG</span>：Skill 告诉 AI "<strong>怎么</strong>做"，RAG 给 AI "<strong>做什么的资料</strong>"，分工不同。</div>
+  <div class="rel-card"><span class="rel-name">大模型的上下文</span>：Skill 加载后会被拼到 system prompt 里，间接决定上下文里"该按什么规则办事"。 <a href="llm-context.html">→ 详见</a></div>
+
+  <h2><span class="num">6</span>一个例子 / 类比</h2>
+  <div class="example">
+    <p>把 Skill 想象成公司里的<strong>岗位 SOP（标准操作流程）</strong>：</p>
+    <ul>
+      <li>新人入职不靠老员工口口相传，而是看 SOP 文档</li>
+      <li>SOP 里写着：什么时候触发（"客户来投诉"）、怎么做（"先记录、再道歉、再升级"）、输出什么（"投诉处理单"）、哪些坑不能踩（"不要当场承诺赔偿"）</li>
+      <li>写得好的 SOP，新人照做就能产出老员工 80% 的水平</li>
+      <li><strong>Skill 就是给 AI 的 SOP</strong>：写得越具体，AI 输出越稳定</li>
+    </ul>
+    <p style="margin-top:14px;">跟 Agent 的关系像：<strong>Skill 是工具箱里的扳手，Agent 是会用扳手的工人</strong>。工人决定什么时候用哪把扳手，扳手本身不管事。</p>
+  </div>
+
+  <h2><span class="num">7</span>我真的懂了吗？（自检 3 题）</h2>
+  <details>
+    <summary><strong>1. Skill 的四件套是什么？为什么缺一不可？</strong></summary>
+    <div class="hint">触发条件、工作流、输出模板、注意事项各自的作用。</div>
+  </details>
+  <details>
+    <summary><strong>2. 项目级 Skill 和用户级 Skill 怎么区分？分别什么时候用？</strong></summary>
+    <div class="hint">仓库根目录的 <code>.workbuddy/skills/</code> vs 用户主目录的 <code>~/.workbuddy/skills/</code>。</div>
+  </details>
+  <details>
+    <summary><strong>3. 为什么说"Skill 是一次写好就完事"是错的？</strong></summary>
+    <div class="hint">Skill 是用出来的，需要根据效果持续打磨。</div>
+  </details>
+
+  <h2><span class="num">8</span>下一步能去哪儿</h2>
+  <ul class="ref-list">
+    <li>📖 <strong>Claude / WorkBuddy 的 Skill 编写规范</strong> —— 主流平台对 Skill frontmatter、描述、触发条件的官方约定。</li>
+    <li>📖 <a href="https://www.anthropic.com/research/building-effective-agents">Anthropic "Building Effective Agents"</a> —— 理解 Skill 跟 Agent 工作流如何配合。</li>
+    <li>📖 <strong>本仓库的 <code>.workbuddy/skills/learn-a-concept/SKILL.md</code></strong> —— 看一个真实可运行的 Skill 长什么样。</li>
+    <li>📖 <a href="concept-relationship.html">三个概念的关系图</a> —— 看清 Agent、上下文、Skill 是怎么配合的。</li>
+  </ul>
+
+  <div class="footer">
+    <p>本资料由 <code>learn-a-concept</code> 项目级 Skill 生成 · 源文件 <code>notes/03-skill.md</code> · HTML 版 <code>learning-materials/skill.html</code></p>
+    <p class="source">生成于 2026-09-05</p>
+  </div>
+
+</div>
+</body>
+</html>

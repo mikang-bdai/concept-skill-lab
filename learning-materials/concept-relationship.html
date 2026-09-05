@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent · 上下文 · Skill · 三者关系</title>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --surface: #ffffff;
+    --ink: #1a1f2c;
+    --ink-2: #4a5468;
+    --ink-3: #7a8294;
+    --line: #e6e1d6;
+    --line-2: #efeadd;
+    --brand: #0e7c86;
+    --brand-2: #14a3af;
+    --brand-soft: #e3f3f5;
+    --accent: #c2410c;
+    --accent-soft: #fff1e6;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --warn: #a16207;
+    --warn-soft: #fef3c7;
+    --purple: #6d28d9;
+    --purple-soft: #ede9fe;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 32px 24px 80px; }
+  .topbar {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+    margin-bottom: 24px; font-size: 14px;
+  }
+  .topbar a {
+    color: var(--ink-2); text-decoration: none;
+    padding: 6px 12px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--surface);
+    transition: all .15s ease;
+  }
+  .topbar a:hover { border-color: var(--brand); color: var(--brand); }
+  .topbar a.current { background: var(--brand); color: white; border-color: var(--brand); }
+  .topbar .sep { color: var(--ink-3); align-self: center; }
+  .badge {
+    display: inline-block; font-size: 12px; padding: 2px 10px;
+    background: var(--brand-soft); color: var(--brand);
+    border-radius: 999px; font-weight: 500; letter-spacing: .5px;
+  }
+  h1 {
+    font-size: 42px; line-height: 1.15; margin: 8px 0 6px;
+    font-weight: 700; letter-spacing: -1px;
+  }
+  .lede {
+    font-size: 19px; color: var(--ink-2); margin: 8px 0 4px;
+    padding: 16px 20px; background: var(--surface);
+    border-left: 4px solid var(--brand); border-radius: 0 8px 8px 0;
+  }
+  .meta { color: var(--ink-3); font-size: 13px; margin: 16px 0 32px; }
+  h2 {
+    font-size: 26px; margin: 48px 0 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-weight: 600; letter-spacing: -.3px;
+  }
+  h3 { font-size: 19px; margin: 24px 0 8px; color: var(--ink); }
+  p { margin: 8px 0; color: var(--ink-2); }
+  ul, ol { padding-left: 22px; }
+  li { margin: 6px 0; color: var(--ink-2); }
+  li strong { color: var(--ink); }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+    background: var(--line-2); color: var(--accent);
+    padding: 1px 6px; border-radius: 4px; font-size: .92em;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px 22px; margin: 14px 0;
+  }
+
+  /* 三概念卡片 */
+  .three {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;
+    margin: 16px 0;
+  }
+  @media (max-width: 720px) { .three { grid-template-columns: 1fr; } }
+  .three .concept {
+    padding: 18px 20px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-top: 4px solid var(--brand);
+  }
+  .three .concept.s2 { border-top-color: var(--accent); }
+  .three .concept.s3 { border-top-color: var(--purple); }
+  .three .concept .num {
+    font-size: 12px; font-weight: 600; color: var(--ink-3);
+    letter-spacing: 1px; margin-bottom: 4px;
+  }
+  .three .concept .name {
+    font-size: 22px; font-weight: 700; color: var(--ink);
+    margin: 4px 0 8px;
+  }
+  .three .concept .one-liner {
+    color: var(--ink-2); font-size: 14px; line-height: 1.5;
+  }
+  .three .concept .more {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .three .concept .more a {
+    color: var(--brand); text-decoration: none; font-weight: 500;
+  }
+  .three .concept .more a:hover { text-decoration: underline; }
+
+  /* 图区 */
+  .diagram {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 28px 24px; margin: 16px 0;
+    text-align: center;
+  }
+  .diagram svg { max-width: 100%; height: auto; }
+  .diagram .caption {
+    color: var(--ink-3); font-size: 13px; margin-top: 14px;
+    text-align: left; max-width: 720px; margin-left: auto; margin-right: auto;
+  }
+  .diagram .caption strong { color: var(--ink-2); }
+
+  /* 对比表 */
+  table.compare {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; overflow: hidden;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  table.compare th, table.compare td {
+    padding: 12px 14px; text-align: left; vertical-align: top;
+    border-bottom: 1px solid var(--line-2);
+  }
+  table.compare thead th {
+    background: var(--brand-soft); color: var(--brand);
+    font-weight: 600; font-size: 13px; letter-spacing: .3px;
+    border-bottom: 2px solid var(--brand);
+  }
+  table.compare tbody tr:last-child td { border-bottom: none; }
+  table.compare tbody tr:nth-child(even) { background: #fbfaf6; }
+  table.compare td:first-child {
+    font-weight: 600; color: var(--ink); background: #f5f1e8;
+  }
+  table.compare code { font-size: 13px; }
+
+  /* 关键洞察 */
+  .insight {
+    background: var(--warn-soft); border-left: 4px solid var(--warn);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+  }
+  .insight .label {
+    color: var(--warn); font-weight: 700; font-size: 13px;
+    letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .insight p { color: var(--ink); margin: 6px 0; }
+
+  .good-insight {
+    background: var(--good-soft); border-left: 4px solid var(--good);
+    border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+  }
+  .good-insight .label {
+    color: var(--good); font-weight: 700; font-size: 13px;
+    letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .good-insight p { color: var(--ink); margin: 6px 0; }
+
+  /* 时序步骤 */
+  .sequence {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px 22px; margin: 16px 0;
+  }
+  .seq-step {
+    display: grid; grid-template-columns: 60px 1fr; gap: 14px;
+    padding: 12px 0; border-bottom: 1px dashed var(--line-2);
+  }
+  .seq-step:last-child { border-bottom: none; }
+  .seq-step .step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--brand-soft); color: var(--brand);
+    text-align: center; line-height: 36px; font-weight: 700;
+    font-size: 15px;
+  }
+  .seq-step .step-body .who {
+    font-size: 12px; color: var(--ink-3); letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 600;
+  }
+  .seq-step .step-body p { margin: 4px 0; }
+  .seq-step .step-body .ctx { color: var(--accent); font-weight: 500; }
+  .seq-step .step-body .skill { color: var(--purple); font-weight: 500; }
+
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .ref-list a { color: var(--brand); text-decoration: none; font-weight: 500; }
+  .ref-list a:hover { text-decoration: underline; }
+  .footer {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line);
+    color: var(--ink-3); font-size: 13px;
+  }
+  .footer .source { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; background: var(--line-2); color: var(--ink-2); border-radius: 4px; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topbar">
+    <span class="sep">学习资料：</span>
+    <a href="agent.html">Agent</a>
+    <a href="llm-context.html">大模型的上下文</a>
+    <a href="skill.html">Skill</a>
+    <a href="concept-relationship.html" class="current">三者关系 ↗</a>
+  </nav>
+
+  <h1>Agent · 上下文 · Skill <span style="font-size:18px;color:var(--ink-3);font-weight:500;">— 三者关系</span></h1>
+  <p><span class="badge">概念关系 04</span> &nbsp; <span class="tag">结构</span><span class="tag">协作</span><span class="tag">时序</span></p>
+  <p class="lede">三个概念不是孤立的——<strong>Agent 是舞台</strong>，<strong>上下文是工作记忆</strong>，<strong>Skill 是岗位手册</strong>。拆开各管一摊，合起来才能跑出能办事的 AI。</p>
+  <p class="meta">生成于 2026-09-05 · 来源：项目级 Skill <code>learn-a-concept</code> · 本页是第 4 份学习资料，作业明确要求的"概念关系"页</p>
+
+  <h2>一句话总结三件事</h2>
+  <div class="three">
+    <div class="concept s1">
+      <div class="num">01 · AGENT</div>
+      <div class="name">Agent</div>
+      <div class="one-liner">能自己拆活、自己动手、直到把事儿办成的 AI 角色。</div>
+      <div class="more"><a href="agent.html">→ 完整学习资料</a></div>
+    </div>
+    <div class="concept s2">
+      <div class="num">02 · 上下文</div>
+      <div class="name">大模型的上下文</div>
+      <div class="one-liner">模型每次"思考"时能看见的全部信息窗口，决定它这一轮能记住什么。</div>
+      <div class="more"><a href="llm-context.html">→ 完整学习资料</a></div>
+    </div>
+    <div class="concept s3">
+      <div class="num">03 · SKILL</div>
+      <div class="name">Skill</div>
+      <div class="one-liner">把"做某件事的最佳实践 + 输出规范"打包成的可复用指令包。</div>
+      <div class="more"><a href="skill.html">→ 完整学习资料</a></div>
+    </div>
+  </div>
+
+  <h2>结构关系图</h2>
+  <div class="diagram">
+    <svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Agent Context Skill 结构关系图">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#7a8294"/>
+        </marker>
+        <marker id="arrow-brand" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#0e7c86"/>
+        </marker>
+        <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#6d28d9"/>
+        </marker>
+        <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#c2410c"/>
+        </marker>
+      </defs>
+
+      <!-- 大背景：Agent 圆角矩形 -->
+      <rect x="40" y="40" width="640" height="280" rx="18" ry="18"
+            fill="#e3f3f5" stroke="#0e7c86" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="60" y="68" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#0e7c86">AGENT 舞台</text>
+      <text x="60" y="86" font-family="-apple-system, sans-serif" font-size="12" fill="#4a5468">目标 → 规划 → 工具调用 → 观察 → 迭代</text>
+
+      <!-- LLM 大脑 -->
+      <circle cx="200" cy="180" r="58" fill="#0e7c86" opacity="0.15" stroke="#0e7c86" stroke-width="2"/>
+      <text x="200" y="175" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#0e7c86">LLM 大脑</text>
+      <text x="200" y="194" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#4a5468">思考 / 规划</text>
+
+      <!-- 上下文窗口 -->
+      <rect x="310" y="120" width="160" height="100" rx="10" ry="10"
+            fill="#fff1e6" stroke="#c2410c" stroke-width="2"/>
+      <text x="390" y="145" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#c2410c">上下文窗口</text>
+      <text x="390" y="166" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#4a5468">system prompt</text>
+      <text x="390" y="182" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#4a5468">历史消息 + 工具结果</text>
+      <text x="390" y="198" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#4a5468">Skill 内容</text>
+      <text x="390" y="214" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#7a8294" font-style="italic">「小桌子」</text>
+
+      <!-- 工具 -->
+      <rect x="80" y="260" width="120" height="40" rx="8" ry="8"
+            fill="#ffffff" stroke="#4a5468" stroke-width="1.5"/>
+      <text x="140" y="285" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="12" fill="#4a5468">🔧 工具（搜/读/写/调）</text>
+
+      <!-- 循环控制器 -->
+      <rect x="540" y="260" width="120" height="40" rx="8" ry="8"
+            fill="#ffffff" stroke="#4a5468" stroke-width="1.5"/>
+      <text x="600" y="285" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="12" fill="#4a5468">♻️ 循环控制器</text>
+
+      <!-- Skill 盒子（在 Agent 外） -->
+      <rect x="510" y="40" width="170" height="60" rx="10" ry="10"
+            fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+      <text x="595" y="62" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="14" font-weight="700" fill="#6d28d9">📚 Skill 库</text>
+      <text x="595" y="82" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="11" fill="#4a5468">SKILL.md × N</text>
+
+      <!-- 箭头：LLM → 上下文 -->
+      <line x1="258" y1="180" x2="306" y2="170" stroke="#0e7c86" stroke-width="2" marker-end="url(#arrow-brand)"/>
+      <text x="278" y="160" font-family="-apple-system, sans-serif" font-size="10" fill="#0e7c86">读</text>
+
+      <!-- 箭头：Skill → 上下文（关键：Skill 进上下文才生效） -->
+      <path d="M 540 95 Q 480 130 470 145" fill="none" stroke="#6d28d9" stroke-width="2" marker-end="url(#arrow-purple)"/>
+      <text x="455" y="115" font-family="-apple-system, sans-serif" font-size="11" font-weight="600" fill="#6d28d9">注入</text>
+
+      <!-- 箭头：循环控制器 → LLM -->
+      <path d="M 540 280 Q 380 280 258 220" fill="none" stroke="#7a8294" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+      <text x="380" y="298" font-family="-apple-system, sans-serif" font-size="10" fill="#7a8294">驱动下一轮</text>
+
+      <!-- 箭头：LLM → 工具 -->
+      <line x1="170" y1="232" x2="155" y2="258" stroke="#7a8294" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="178" y="252" font-family="-apple-system, sans-serif" font-size="10" fill="#7a8294">调</text>
+
+      <!-- 箭头：工具 → 上下文（结果进上下文） -->
+      <path d="M 200 270 Q 280 270 350 220" fill="none" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow-accent)"/>
+      <text x="240" y="260" font-family="-apple-system, sans-serif" font-size="10" fill="#c2410c">结果回写</text>
+    </svg>
+    <div class="caption">
+      <strong>怎么读这张图</strong>：外层虚线框 = <strong>Agent 舞台</strong>，内部三个核心部件（LLM 大脑、上下文窗口、工具集）由 <strong>循环控制器</strong> 串起来。<br>
+      <strong>关键洞察 1</strong>：<span style="color:#6d28d9;font-weight:600;">Skill 不直接被 Agent 调用</span>——它要先 <strong>注入到上下文窗口</strong>（通常以 system prompt 片段的形式），LLM 才能"看到"它、才会按它的规则办事。<br>
+      <strong>关键洞察 2</strong>：<span style="color:#c2410c;font-weight:600;">工具的返回结果</span>也会被回写到上下文——所以上下文窗口的大小，直接决定了 Agent 一次能"看到"多少工具结果、历史消息和 Skill 指令。
+    </div>
+  </div>
+
+  <h2>三方对比表</h2>
+  <table class="compare">
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>Agent</th>
+        <th>大模型的上下文</th>
+        <th>Skill</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>本质</td>
+        <td>工程实体：能办事的 AI 角色</td>
+        <td>运行时窗口：模型一次能"看见"的全部信息</td>
+        <td>结构化文档：可复用的指令包</td>
+      </tr>
+      <tr>
+        <td>类比</td>
+        <td>会自己跑去图书馆查资料再给你做总结的助理</td>
+        <td>学霸的小桌子 —— 桌面（窗口）决定他能看到啥</td>
+        <td>公司里的岗位 SOP / 工具箱里的扳手</td>
+      </tr>
+      <tr>
+        <td>谁来定义</td>
+        <td>开发者用代码 + LLM + 工具拼出来</td>
+        <td>由"塞了什么"决定：system / 用户 / 工具 / Skill 注入</td>
+        <td>人或团队写一次，可被多次复用</td>
+      </tr>
+      <tr>
+        <td>什么时候存在</td>
+        <td>运行时（跑起来才有）</td>
+        <td>运行时（每次推理都是新窗口）</td>
+        <td>静态文件 <code>SKILL.md</code>，需要时加载</td>
+      </tr>
+      <tr>
+        <td>解决的核心问题</td>
+        <td>让 AI 从"会说话"变成"会办事"</td>
+        <td>让 AI 在多轮交互中能"记得"+"能用"信息</td>
+        <td>让好的工作流可以沉淀、复用、跨会话一致</td>
+      </tr>
+      <tr>
+        <td>典型失败模式</td>
+        <td>规划走偏、工具调错、死循环</td>
+        <td>超长截断、中段衰减（Lost in the Middle）</td>
+        <td>规则太粗没用、太细难维护、相互重叠</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="good-insight">
+    <div class="label">一句话定位</div>
+    <p><strong>Agent</strong> 负责"接目标、想办法、动手干"，<strong>上下文</strong> 负责"它这一轮能看见啥、记住啥"，<strong>Skill</strong> 负责"按什么规则 / 走什么流程 / 输出什么格式"。</p>
+    <p>三者不是替代关系，是<strong>层叠</strong>关系 —— 一个能稳定干活的 Agent，一定同时具备三者。</p>
+  </div>
+
+  <h2>协作时序：Agent 跑一次任务发生了什么</h2>
+  <p>把三个概念放进一个真实场景 —— "用户让 Agent <strong>总结一个陌生概念</strong>"，看看每一步三者各扮演什么角色：</p>
+
+  <div class="sequence">
+
+    <div class="seq-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="who">用户</div>
+        <p>说："learn-a-concept: 大模型的上下文"。</p>
+      </div>
+    </div>
+
+    <div class="seq-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="who">Agent 循环控制器</div>
+        <p>识别到调用意图 → 把 <span class="skill">learn-a-concept</span> 这个 <strong>Skill 的内容</strong>从 <code>.workbuddy/skills/</code> 里读出来，<span class="ctx">注入到上下文窗口的 system prompt 部分</span>。</p>
+      </div>
+    </div>
+
+    <div class="seq-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="who">LLM 大脑</div>
+        <p>看到 <span class="ctx">上下文</span>：system 部分有 Skill 规则 + 8 章节模板，user 部分是"大模型的上下文"。开始按 Skill 模板规划怎么写。</p>
+      </div>
+    </div>
+
+    <div class="seq-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="who">LLM → 工具</div>
+        <p>决定调 <code>search_web</code> / <code>Read</code> 工具验证资料 → <strong>结果回写到上下文</strong>（追加到对话历史）。</p>
+      </div>
+    </div>
+
+    <div class="seq-step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="who">LLM 大脑</div>
+        <p>再次思考：<span class="ctx">上下文</span>里有 Skill 规则 + 工具结果 → 决定继续写还是停。</p>
+      </div>
+    </div>
+
+    <div class="seq-step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="who">Agent 循环控制器</div>
+        <p>判断输出完成 → 调 <code>Write</code> 工具把内容写到 <code>notes/02-...md</code> → 把"写入成功"也加进 <span class="ctx">上下文</span>，返回给用户。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>关键洞察（必须记住）</h2>
+
+  <div class="insight">
+    <div class="label">三者缺一不可</div>
+    <p>没有 Skill：Agent 也能跑，但每次输出格式 / 工作流不稳定，全靠 LLM 临场发挥。</p>
+    <p>没有上下文：Agent 不可能存在 —— LLM 每次推理都从零开始，连用户的指令都看不见。</p>
+    <p>没有 Agent：Skill 和 上下文 只是"原材料"，没人驱动就跑不出活儿。</p>
+  </div>
+
+  <div class="insight">
+    <div class="label">Skill 一定要进上下文才生效</div>
+    <p><code>SKILL.md</code> 文件躺在磁盘上，<strong>不会自动生效</strong>。必须是 Agent 循环控制器把它<strong>读出来</strong>、<strong>塞进上下文</strong>的 system prompt 段，LLM 才能"看到"它、才会按它办事。</p>
+    <p>这也意味着：如果 Skill 太长，会<strong>挤占上下文窗口</strong>，留给历史消息和工具结果的空间就变少了。</p>
+  </div>
+
+  <div class="insight">
+    <div class="label">上下文是 Agent 的"短期记忆"</div>
+    <p>Agent 看起来有"记忆"，其实只是因为它的<strong>当前上下文窗口</strong>里有这些信息。清空上下文 = Agent 失忆。下一段对话开始，<strong>Skill 通常要重新注入</strong>，否则按默认行为跑。</p>
+  </div>
+
+  <div class="insight">
+    <div class="label">三者不在一个层级</div>
+    <p>很多人会问"Agent 和 Skill 哪个重要"——其实问错了。它们是不同维度的：</p>
+    <ul>
+      <li><strong>Agent</strong> 是"谁在干活"（<em>角色 / 实体</em>）</li>
+      <li><strong>上下文</strong> 是"它知道什么"（<em>信息 / 状态</em>）</li>
+      <li><strong>Skill</strong> 是"它按什么规矩干活"（<em>规则 / 流程</em>）</li>
+    </ul>
+  </div>
+
+  <h2>下一步能去哪儿</h2>
+  <ul class="ref-list">
+    <li>📖 <a href="agent.html">Agent 完整学习资料</a> —— 看 Agent 的三件套、循环控制、失败模式</li>
+    <li>📖 <a href="llm-context.html">大模型的上下文完整学习资料</a> —— 看 Lost in the Middle、token 计费、RAG 怎么突破窗口</li>
+    <li>📖 <a href="skill.html">Skill 完整学习资料</a> —— 看 Skill 的四件套、项目级 vs 用户级</li>
+    <li>📖 <strong>本仓库的 <code>.workbuddy/skills/learn-a-concept/SKILL.md</code></strong> —— 看一个真实可运行的 Skill 长什么样（也是这份资料的来源）</li>
+  </ul>
+
+  <div class="footer">
+    <p>本资料由 <code>learn-a-concept</code> 项目级 Skill 生成 · HTML 版 <code>learning-materials/concept-relationship.html</code></p>
+    <p class="source">生成于 2026-09-05</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -29,9 +29,18 @@
 
 ## 生成的学习资料
 
-- `notes/01-agent.md`
-- `notes/02-da-mo-xing-de-shang-xia-wen.md`
-- `notes/03-skill.md`
+### Markdown 源稿（`notes/`）
+
+- `notes/01-agent.md` — Agent
+- `notes/02-da-mo-xing-de-shang-xia-wen.md` — 大模型的上下文
+- `notes/03-skill.md` — Skill
+
+### HTML 排版版（`learning-materials/`，作业要求的最终交付形式）
+
+- `learning-materials/agent.html` — Agent
+- `learning-materials/llm-context.html` — 大模型的上下文
+- `learning-materials/skill.html` — Skill
+- `learning-materials/concept-relationship.html` — **三个概念的关系图**（额外补的，作业明确要求"概念关系"页）
 
 ## 目录结构（最终）
 
@@ -47,17 +56,27 @@ concept-skill-lab/
 │   ├── 01-agent.md
 │   ├── 02-da-mo-xing-de-shang-xia-wen.md
 │   └── 03-skill.md
+├── learning-materials/
+│   ├── agent.html
+│   ├── llm-context.html
+│   ├── skill.html
+│   └── concept-relationship.html
 └── assignments/
     └── homework-1.md
 ```
 
 ## 提交历史
 
-本地 2 个语义清晰的 commit；GitHub 上 7 个 commit（每个文件一个，因为 GitHub Contents API 一次只能操作一个文件）。
+- 本地：4 个语义清晰的 commit
+  - `init: scaffold + project-level Skill learn-a-concept`
+  - `notes: add 3 concept learning materials via learn-a-concept`
+  - `docs: 补充提交历史 + 把临时 push 脚本加入 .gitignore`
+  - `materials: add 4 HTML 学习资料 + 更新 README 与作业存档`
+- 远程：与本地一致（push 在最后一步完成）
 
 ## 关键踩坑
 
 1. **代理只放 `api.github.com`，不放 `github.com`**：当前环境的 `127.0.0.1:57376` 代理对 `github.com` 域名的 git 协议返 502，但 `api.github.com` OK。所以 `git push` 不通，但 `gh api` 通。
-3. **绕过方法**：写 `push_via_api.py`（已加入 `.gitignore`），用 GitHub Contents API 逐文件上传。
-
-2. **WorkBuddy 项目级 Skill 的识别时机**：Skill 物理文件写到 `<workspace>/.workbuddy/skills/<name>/SKILL.md` 后，要在 WorkBuddy 里**重新打开那个目录**才能被识别。本仓库的 Skill 在 WorkBuddy 直接打开 `D:/wawa/concept-skill-lab/` 时可用。
+2. **绕过方法**：写 `push_via_api.py`（已加入 `.gitignore`），用 GitHub Contents API 逐文件上传。
+3. **WorkBuddy 项目级 Skill 的识别时机**：Skill 物理文件写到 `<workspace>/.workbuddy/skills/<name>/SKILL.md` 后，要在 WorkBuddy 里**重新打开那个目录**才能被识别。本仓库的 Skill 在 WorkBuddy 直接打开 `D:/wawa/concept-skill-lab/` 时可用。
+4. **作业目录要求 vs 已有命名**：作业要求 `learning-materials/*.html`，但 Skill 默认输出 markdown 到 `notes/`。两个目录都保留 —— `notes/` 是源稿，GitHub 直接渲染；`learning-materials/` 是 HTML 排版版，浏览器打开即看，匹配作业目录要求。

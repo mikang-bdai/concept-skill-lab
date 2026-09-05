@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent · 概念学习资料</title>
+<style>
+  :root {
+    --bg: #faf8f3;
+    --surface: #ffffff;
+    --ink: #1a1f2c;
+    --ink-2: #4a5468;
+    --ink-3: #7a8294;
+    --line: #e6e1d6;
+    --line-2: #efeadd;
+    --brand: #0e7c86;
+    --brand-2: #14a3af;
+    --brand-soft: #e3f3f5;
+    --accent: #c2410c;
+    --accent-soft: #fff1e6;
+    --good: #15803d;
+    --good-soft: #dcfce7;
+    --bad: #b91c1c;
+    --bad-soft: #fee2e2;
+    --warn: #a16207;
+    --warn-soft: #fef3c7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+  .topbar {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+    margin-bottom: 24px; font-size: 14px;
+  }
+  .topbar a {
+    color: var(--ink-2); text-decoration: none;
+    padding: 6px 12px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--surface);
+    transition: all .15s ease;
+  }
+  .topbar a:hover { border-color: var(--brand); color: var(--brand); }
+  .topbar a.current { background: var(--brand); color: white; border-color: var(--brand); }
+  .topbar .sep { color: var(--ink-3); align-self: center; }
+  .badge {
+    display: inline-block; font-size: 12px; padding: 2px 10px;
+    background: var(--brand-soft); color: var(--brand);
+    border-radius: 999px; font-weight: 500; letter-spacing: .5px;
+  }
+  h1 {
+    font-size: 44px; line-height: 1.15; margin: 8px 0 6px;
+    font-weight: 700; letter-spacing: -1px;
+  }
+  .lede {
+    font-size: 19px; color: var(--ink-2); margin: 8px 0 4px;
+    padding: 16px 20px; background: var(--surface);
+    border-left: 4px solid var(--brand); border-radius: 0 8px 8px 0;
+  }
+  .meta { color: var(--ink-3); font-size: 13px; margin: 16px 0 32px; }
+  h2 {
+    font-size: 24px; margin: 48px 0 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font-weight: 600; letter-spacing: -.3px;
+  }
+  h2 .num {
+    display: inline-block; width: 32px; height: 32px;
+    background: var(--brand-soft); color: var(--brand);
+    border-radius: 8px; text-align: center; line-height: 32px;
+    font-size: 15px; margin-right: 10px; vertical-align: middle;
+    font-weight: 600;
+  }
+  h3 { font-size: 18px; margin: 24px 0 8px; color: var(--ink); }
+  p { margin: 8px 0; color: var(--ink-2); }
+  ul, ol { padding-left: 22px; }
+  li { margin: 6px 0; color: var(--ink-2); }
+  li strong { color: var(--ink); }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+    background: var(--line-2); color: var(--accent);
+    padding: 1px 6px; border-radius: 4px; font-size: .92em;
+  }
+  pre {
+    background: #1a1f2c; color: #e8eaf0;
+    padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; font-size: 14px; line-height: 1.5;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  blockquote {
+    margin: 12px 0; padding: 12px 18px;
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    color: var(--ink-2); border-radius: 0 6px 6px 0;
+  }
+  blockquote p { color: var(--ink-2); margin: 4px 0; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 20px; margin: 14px 0;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .misconception {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin: 12px 0; align-items: stretch;
+  }
+  @media (max-width: 640px) { .misconception { grid-template-columns: 1fr; } }
+  .mis { padding: 12px 14px; border-radius: 8px; font-size: 15px; }
+  .mis-bad { background: var(--bad-soft); color: #7f1d1d; border-left: 3px solid var(--bad); }
+  .mis-good { background: var(--good-soft); color: #14532d; border-left: 3px solid var(--good); }
+  .mis-label { font-size: 12px; font-weight: 600; letter-spacing: .5px; margin-bottom: 4px; opacity: .75; }
+  .rel-card {
+    padding: 14px 16px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+    margin: 8px 0;
+  }
+  .rel-card .rel-name { font-weight: 600; color: var(--brand); }
+  .example {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 20px 22px; margin: 14px 0;
+    position: relative;
+  }
+  .example::before {
+    content: "💡"; position: absolute; top: -14px; left: 18px;
+    background: var(--bg); padding: 0 6px; font-size: 22px;
+  }
+  details {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 8px; padding: 12px 16px; margin: 8px 0;
+  }
+  details summary {
+    cursor: pointer; font-weight: 500; color: var(--ink);
+    list-style: none; display: flex; align-items: center; gap: 8px;
+  }
+  details summary::before {
+    content: "→"; color: var(--brand); font-weight: 700;
+    transition: transform .2s; display: inline-block;
+  }
+  details[open] summary::before { transform: rotate(90deg); }
+  details summary::-webkit-details-marker { display: none; }
+  details .hint {
+    margin-top: 8px; color: var(--ink-3); font-size: 14px;
+    padding: 8px 12px; background: var(--brand-soft);
+    border-radius: 6px;
+  }
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .ref-list a { color: var(--brand); text-decoration: none; font-weight: 500; }
+  .ref-list a:hover { text-decoration: underline; }
+  .footer {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line);
+    color: var(--ink-3); font-size: 13px;
+  }
+  .footer .source { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; background: var(--line-2); color: var(--ink-2); border-radius: 4px; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="topbar">
+    <span class="sep">学习资料：</span>
+    <a href="agent.html" class="current">Agent</a>
+    <a href="llm-context.html">大模型的上下文</a>
+    <a href="skill.html">Skill</a>
+    <a href="concept-relationship.html">三者关系 ↗</a>
+  </nav>
+
+  <h1>Agent</h1>
+  <p><span class="badge">概念 01</span> &nbsp; <span class="tag">AI</span><span class="tag">自主行动</span><span class="tag">工具调用</span></p>
+  <p class="lede">能自己拆活儿、自己动手、直到把事儿办成的 AI 角色。</p>
+  <p class="meta">生成于 2026-09-05 · 来源：项目级 Skill <code>learn-a-concept</code> · 源文件：<code>notes/01-agent.md</code></p>
+
+  <h2><span class="num">1</span>一句话定义</h2>
+  <p>Agent 是一种<strong>有自主行动能力</strong>的 AI —— 它不只是回答，而是<strong>主动规划步骤、调用工具、循环执行，直到目标完成</strong>。</p>
+
+  <h2><span class="num">2</span>解决什么问题</h2>
+  <div class="card">
+    <p><strong>场景</strong>：你想让 AI 真正去干活，而不是只会说"我可以帮你"。</p>
+    <p><strong>痛点</strong>：普通聊天 AI 只能产出文本，碰到"帮我把这 30 张表合并成一张""帮我订机票""帮我把代码改了跑通测试"这种需要"动手"的任务就抓瞎。</p>
+    <p><strong>不解决的后果</strong>：所有动作都得你手动复制粘贴 AI 的输出、再换工具执行，效率被限制在「AI 给建议 → 人来落地」的单步循环里。</p>
+  </div>
+
+  <h2><span class="num">3</span>核心要点（5-8 条）</h2>
+  <ul>
+    <li><strong>三件套</strong>：Agent = LLM 大脑 + 工具集 + 记忆 + 循环控制器，缺一不可。</li>
+    <li><strong>循环控制器是灵魂</strong>：观察 → 思考 → 行动 → 观察新结果 → 再思考……直到目标达成。</li>
+    <li><strong>工具是手脚</strong>：搜网页、读文件、写代码、调 API、发邮件，都是工具。</li>
+    <li><strong>记忆分两层</strong>：短期记忆（当前任务上下文）+ 长期记忆（跨任务沉淀）。</li>
+    <li><strong>跟 ChatBot 的区别</strong>：ChatBot 是"问一答一"，Agent 是"接目标、想办法、动手干"。</li>
+    <li><strong>能力上限</strong> = LLM 规划能力 × 工具覆盖度，二者都要强才好用。</li>
+    <li><strong>多 Agent 协作</strong>：复杂任务拆给多个 Agent 各管一摊（Code + Test + Review）。</li>
+    <li><strong>失败模式</strong>：规划走偏、工具调错、死循环 —— 必须有终止条件和人工兜底。</li>
+  </ul>
+
+  <h2><span class="num">4</span>常见误解</h2>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>Agent = 高级聊天机器人</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>聊天机器人"说话"，Agent"办事"。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>Agent 一定会自我学习</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>多数 Agent 不更新模型参数，只是"更会用工具"。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>Agent = AGI</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>Agent 是工程产物，AGI 是通用智能的远期目标，二者不等价。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>给 LLM 接几个 API 就叫 Agent</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>必须有"目标 → 规划 → 工具调用 → 观察 → 迭代"的完整闭环。</div>
+  </div>
+  <div class="misconception">
+    <div class="mis mis-bad"><div class="mis-label">❌ 误解</div>Agent 越复杂越好</div>
+    <div class="mis mis-good"><div class="mis-label">✅ 正确</div>工具越多循环越长越容易跑偏，简单任务不需要复杂 Agent。</div>
+  </div>
+
+  <h2><span class="num">5</span>跟其他概念的关系</h2>
+  <div class="rel-card"><span class="rel-name">LLM</span>：LLM 是 Agent 的"大脑"，没有 LLM 就没有现代 Agent；但 LLM 单独存在时不是 Agent。</div>
+  <div class="rel-card"><span class="rel-name">ChatBot / 对话系统</span>：ChatBot 是被动应答的"嘴"，Agent 是主动办事的"手"。</div>
+  <div class="rel-card"><span class="rel-name">Workflow / 流程</span>：固定 Workflow 是写死的 if-else 链，Agent 是动态规划的"灵活流程"。</div>
+  <div class="rel-card"><span class="rel-name">RAG（检索增强）</span>：RAG 是 Agent 的一个常用工具（"查资料"），但 RAG 本身不是 Agent。</div>
+  <div class="rel-card"><span class="rel-name">Copilot / AI 助手</span>：Copilot 通常是"副驾驶"（人主导，AI 辅助），Agent 更像"自动驾驶"（AI 主导，人兜底）。</div>
+  <div class="rel-card"><span class="rel-name">大模型的上下文</span>：Agent 的"短期记忆"本质就是它的当前上下文，工具返回结果也会被追加到上下文里。 <a href="llm-context.html">→ 详见</a></div>
+  <div class="rel-card"><span class="rel-name">Skill</span>：Skill 是 Agent 的"技能手册"，告诉 Agent 在什么场景下用哪套工作流。 <a href="skill.html">→ 详见</a></div>
+
+  <h2><span class="num">6</span>一个例子 / 类比</h2>
+  <div class="example">
+    <p>把 Agent 想象成一个<strong>新入职的实习生</strong>：</p>
+    <ul>
+      <li>你告诉他目标（"把这季度的销售数据做成可视化报表"）</li>
+      <li>他会自己问"数据在哪""用什么工具""做成什么样"</li>
+      <li>他会去翻数据库、跑脚本、画图表</li>
+      <li>遇到问题会回来找你确认（"口径对不对？"）</li>
+      <li>而不是等你一步步指挥</li>
+    </ul>
+    <p style="margin-top:14px;">普通 ChatBot 像一本《百科全书》——你问啥它答啥，不会主动翻页。Agent 像一个<strong>会自己跑去图书馆查资料、回来给你做总结的助理</strong>。</p>
+  </div>
+
+  <h2><span class="num">7</span>我真的懂了吗？（自检 3 题）</h2>
+  <details>
+    <summary><strong>1. Agent 跟 ChatBot 的根本区别是什么？</strong></summary>
+    <div class="hint">从"主动/被动"和"说话/办事"两个维度答。</div>
+  </details>
+  <details>
+    <summary><strong>2. 一个最小的 Agent 需要哪三件套？</strong></summary>
+    <div class="hint">LLM、工具、还有一个关键的"控制循环"组件。</div>
+  </details>
+  <details>
+    <summary><strong>3. 为什么说"给 LLM 接几个 API 还不算 Agent"？</strong></summary>
+    <div class="hint">判断标准不是接了多少 API，而是有没有完整的闭环。</div>
+  </details>
+
+  <h2><span class="num">8</span>下一步能去哪儿</h2>
+  <ul class="ref-list">
+    <li>📖 <a href="https://arxiv.org/abs/2210.03629">ReAct 论文（Reasoning + Acting）</a> —— Agent 循环控制器的经典奠基论文。</li>
+    <li>📖 <a href="https://www.langchain.com/">LangChain / LangGraph 官方文档</a> —— 工业界最主流的 Agent 编排框架之一。</li>
+    <li>📖 <strong>AutoGPT / BabyAGI 项目源码</strong> —— 看一个最小可运行的 Agent 长什么样。</li>
+    <li>📖 <a href="concept-relationship.html">三个概念的关系图</a> —— 看清 Agent、上下文、Skill 是怎么配合的。</li>
+  </ul>
+
+  <div class="footer">
+    <p>本资料由 <code>learn-a-concept</code> 项目级 Skill 生成 · 源文件 <code>notes/01-agent.md</code> · HTML 版 <code>learning-materials/agent.html</code></p>
+    <p class="source">生成于 2026-09-05</p>
+  </div>
+
+</div>
+</body>
+</html>
